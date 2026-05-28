@@ -1,6 +1,6 @@
-package repository;
+package co.istad.assigment003.repository;
 
-import domain.Coffee;
+import co.istad.assigment003.domain.Coffee;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -9,21 +9,31 @@ import java.util.List;
 @Repository
 public class CoffeeRepository {
 
-    public List<Coffee> findAll(){
-        Coffee coffee1 = new Coffee(1,"Ice Latte","50%");
-        Coffee coffee2 = new Coffee(2,"Ice Latte","50%");
-        Coffee coffee3 = new Coffee(3,"Ice Latte2","110%");
-        Coffee coffee4 = new Coffee(34,"Ice Latte3","30%");
-        Coffee coffee5 = new Coffee(53,"Ice Latte4","60%");
-        Coffee coffee6 = new Coffee(1,"Ice Latte5","20%");
+    public List<Coffee> findAll() {
 
         return new ArrayList<>(List.of(
-                coffee1,
-                coffee2,
-                coffee3,
-                coffee4,
-                coffee5,
-                coffee6
+                new Coffee(1, 1, "Ice Latte", "50%" ,23),
+                new Coffee(2, 2, "Americano", "0%",32),
+                new Coffee(3, 3, "Cappuccino", "30%",33),
+                new Coffee(4, 4, "Mocha", "70%",45)
         ));
+    }
+
+    public Coffee findById(Integer id) {
+
+        return findAll()
+                .stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+    public List<Coffee> search(String name, Integer price) {
+
+        return findAll().stream()
+                .filter(c -> name == null ||
+                        c.getName().toLowerCase().contains(name.toLowerCase()))
+                .filter(c -> price == null ||
+                        c.getCode().equals(price))
+                .toList();
     }
 }
