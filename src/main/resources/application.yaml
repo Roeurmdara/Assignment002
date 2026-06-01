@@ -1,6 +1,22 @@
-
 spring:
   application:
-    name: Assigment003
+    name: Assignment003
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/dara
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+
 server:
-  port: 8090
+  port: 8089
