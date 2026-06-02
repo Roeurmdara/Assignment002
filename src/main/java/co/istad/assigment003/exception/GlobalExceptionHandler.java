@@ -1,9 +1,11 @@
 package co.istad.assigment003.exception;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.*;
 
@@ -11,31 +13,31 @@ import java.util.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
+    public ErrorResponse<?> handleValidationException(MethodArgumentNotValidException e) {
+        log.error("Validation Exception happened: {}", e.getMessage());
 
-        List<Map<String, String>> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> Map.of(
-                        "field", error.getField(),
-                        "message", error.getDefaultMessage()
-                ))
-                .toList();
+        List<FieldErrorResponse> fields = new ArrayList<>();
 
-        Map<String, Object> response = Map.of(
-                "status", false,
-                "code", 400,
-                "message", "Validation is errored",
-                "errors", errors
-        );
+        // Loop through field errors and build the responses
+        e.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            FieldErrorResponse field = FieldErrorResponse.builder()
+                    .field(fieldError.getField())
+                    .message(fieldError.getDefaultMessage())
+                    .build();
+            fields.add(field);
+        });
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        // Return the generic wildcard ErrorResponse
+        return ErrorResponse.builder()
+                .status(false)
+                .code(HttpStatus.BAD_REQUEST.value())
+                .message("Validation is errored")
+                .errors(fields)
+                .build();
     }
-
-
-
-
 
 
     @ExceptionHandler(Exception.class)

@@ -1,5 +1,4 @@
 
-
 package co.istad.assigment003.service.impl;
 
 import co.istad.assigment003.domain.Coffee;
@@ -54,19 +53,15 @@ public class CoffeeServiceImpl implements CoffeeService {
 
     @Override
     public CoffeeResponse addCoffee(CoffeeRequest request) {
-
         if (coffeeRepository.existsByCode(request.code())) {
             throw new IllegalArgumentException("Coffee code already exists: " + request.code());
         }
-
         Coffee coffee = new Coffee();
         coffee.setCode(request.code());
         coffee.setName(request.name());
         coffee.setPrice(request.price());
         coffee.setDescription(request.description());
-
         Coffee saved = coffeeRepository.save(coffee);
-
         return new CoffeeResponse(
                 saved.getId(),
                 saved.getCode(),
@@ -75,6 +70,7 @@ public class CoffeeServiceImpl implements CoffeeService {
                 saved.getDescription()
         );
     }
+
 
     @Override
     public CoffeeResponse updateCoffee(Integer id, CoffeeRequest request) {
@@ -105,12 +101,11 @@ public class CoffeeServiceImpl implements CoffeeService {
     }
 
     @Override
-    public void deleteCoffee(Integer id) {
-
+    public String deleteCoffee(Integer id) {
         Coffee coffee = coffeeRepository.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException("Coffee not found with id: " + id));
-
         coffeeRepository.delete(coffee);
+        return "Coffee with ID " + id + " has been successfully deleted.";
     }
 }

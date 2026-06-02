@@ -12,5 +12,5 @@ public interface CoffeeService {
     CoffeeResponse getCoffeeById(Integer id);
     CoffeeResponse addCoffee(CoffeeRequest coffeeRequest);
     CoffeeResponse updateCoffee(Integer id, CoffeeRequest coffeeRequest);
-    void deleteCoffee(Integer id);
+    String  deleteCoffee(Integer id);
 }
